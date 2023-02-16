@@ -25,6 +25,7 @@ export default class favorManager extends cc.Component {
     startScrollUpBoundY = 0 //最上面的滾動Y邊界
     startScrollDownBoundY = 0 //最下方的滾動Y邊界
     nowTouchTargetNode: cc.Node
+    isStartMove = false
     onLoad() {
         console.warn('ken666::onLoad')
 
@@ -43,8 +44,7 @@ export default class favorManager extends cc.Component {
                 scrollView.enabled = false
                 this.nowTouchTargetNode = item
                 this.scheduleOnce(this.setItemOnTouchMove, 1)
-                item.zIndex = 1
-                item.scale = 1.1
+
             })
 
             itemComp.editMoveBtn.on(cc.Node.EventType.TOUCH_END, () => {
@@ -53,6 +53,10 @@ export default class favorManager extends cc.Component {
                 item.scale = 1
                 let scrollView = this.content.getComponent(cc.ScrollView)
                 this.unschedule(this.setItemOnTouchMove)
+                if(!this.isStartMove) {
+                    //TODO 按鈕的未達長按時間click效果
+                }
+                this.isStartMove = false
                 itemComp.editMoveBtn.off(cc.Node.EventType.TOUCH_MOVE)
                 scrollView.enabled = true
             })
@@ -63,6 +67,7 @@ export default class favorManager extends cc.Component {
                 item.scale = 1
                 let scrollView = this.content.getComponent(cc.ScrollView)
                 this.unschedule(this.setItemOnTouchMove)
+                this.isStartMove = false
                 itemComp.editMoveBtn.off(cc.Node.EventType.TOUCH_MOVE)
                 scrollView.enabled = true
             })
@@ -75,7 +80,10 @@ export default class favorManager extends cc.Component {
 
     setItemOnTouchMove() {
         let itemComp = this.nowTouchTargetNode.getComponent(favorItem)
+        this.nowTouchTargetNode.zIndex = 1
+        this.nowTouchTargetNode.scale = 1.1
         if (itemComp) {
+            this.isStartMove = true
             itemComp.editMoveBtn.on(cc.Node.EventType.TOUCH_MOVE, (e: cc.Event.EventTouch) => {
                 let touchPos = e.touch.getLocation()
                 let convPos = this.content.convertToNodeSpaceAR(touchPos)
