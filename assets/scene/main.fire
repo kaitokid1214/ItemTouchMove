@@ -465,8 +465,8 @@
     "node": {
       "__id__": 8
     },
-    "_enabled": false,
-    "horizontal": true,
+    "_enabled": true,
+    "horizontal": false,
     "vertical": true,
     "inertia": true,
     "brake": 0.5,
